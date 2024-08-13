@@ -1,0 +1,38 @@
+﻿@model IEnumerable<dynamic>
+
+<h2>Thống Kê Nhân Viên Theo Phòng Ban</h2>
+<p>
+    <a href="@Url.Action("Create")" class="btn btn-primary">Thêm Mới Phòng Ban</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Mã Phòng Ban</th>
+            <th>Tên Phòng Ban</th>
+            <th>Mã Phòng Ban</th>
+            <th>Địa Điểm</th>
+            <th>Thêm Nhân Viên</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+            @foreach (var department in Model)
+            {
+            <tr>
+                <td>@department.DepartmentId</td>
+                <td>@department.DepartmentName</td>
+                <td>@department.DepartmentCode</td>
+                <td>@department.Location</td>
+                <td>
+                    <a href="@Url.Action("Create", "Employee", new { departmentId = department.DepartmentId })" class="btn btn-success">Thêm Nhân Viên</a>
+                </td>
+                   
+                <td>
+                    <a href="@Url.Action("Edit", new { id = department.DepartmentId })" class="btn btn-warning">Sửa</a>
+                    <a href="@Url.Action("Delete", new { id = department.DepartmentId })" class="btn btn-danger">Xóa</a>
+                </td>
+            </tr>
+            }
+    </tbody>
+</table>

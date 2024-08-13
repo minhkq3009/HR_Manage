@@ -1,0 +1,23 @@
+﻿@model HRManagement.Models.Department
+
+<h2>Xóa Phòng Ban</h2>
+
+<h3>Bạn có chắc chắn muốn xóa phòng ban này?</h3>
+
+<div>
+    <h4>@Model.DepartmentName</h4>
+    <dl class="row">
+        <dt class="col-sm-2">Mã Phòng Ban</dt>
+        <dd class="col-sm-10">@Model.DepartmentCode</dd>
+        <dt class="col-sm-2">Địa Điểm</dt>
+        <dd class="col-sm-10">@Model.Location</dd>
+    </dl>
+
+    <form asp-action="DeleteConfirmed" method="post">
+        <input type="hidden" name="id" value="@Model.DepartmentId" />
+        <div class="form-group">
+            <input type="submit" value="Xóa" class="btn btn-danger" />
+            <a href="@Url.Action("Index")" class="btn btn-secondary">Hủy</a>
+        </div>
+    </form>
+</div>

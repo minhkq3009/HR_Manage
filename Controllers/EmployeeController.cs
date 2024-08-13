@@ -1,48 +1,41 @@
-﻿using AutoMapper;
+﻿using HRManagement.Data;
 using HRManagement.Models;
-using HRManagement.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HRManagement.Controllers
+public class EmployeeController : Controller
 {
-    public class EmployeeController : Controller
+    private readonly HRDbContext _context;
+
+    public EmployeeController(HRDbContext context)
     {
-        private readonly IEmployeeRepository _employeeRepository;
-        private readonly IDepartmentRepository _departmentRepository;
-        private readonly IMapper _mapper;
-
-        public EmployeeController(IEmployeeRepository employeeRepository, IDepartmentRepository departmentRepository, IMapper mapper)
-        {
-            _employeeRepository = employeeRepository;
-            _departmentRepository = departmentRepository;
-            _mapper = mapper;
-        }
-
-        public async Task<IActionResult> Index()
-        {
-            var employees = await _employeeRepository.GetEmployees();
-            return View(employees);
-        }
-
-        public async Task<IActionResult> Create()
-        {
-            ViewBag.Departments = await _departmentRepository.GetDepartments();
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Create(Employee employee)
-        {
-            if (ModelState.IsValid)
-            {
-                await _employeeRepository.AddEmployee(employee);
-                return RedirectToAction(nameof(Index));
-            }
-            ViewBag.Departments = await _departmentRepository.GetDepartments();
-            return View(employee);
-        }
-
-        // Tương tự các action Edit, Delete
+        _context = context;
     }
 
+    // GET: Employee/Create
+    public IActionResult Create(int departmentId)
+    {
+
+        var department = _context.Departments.FirstOrDefault(d => d.DepartmentId == departmentId);
+        var employee = new Employee
+        {
+            DepartmentId = departmentId,
+            Department = department
+        };
+
+        return View(employee);
+    }
+
+    // POST: Employee/Create
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(Employee employee)
+    {
+        if (ModelState.IsValid)
+        {
+            _context.Add(employee);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index", "Department");
+        }
+        return View(employee);
+    }
 }
